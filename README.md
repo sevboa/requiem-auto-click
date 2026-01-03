@@ -11,6 +11,22 @@
 - Windows
 - Python 3.10+ (желательно)
 
+## Установка (через pip)
+
+Установка через pip с GitHub:
+
+```bash
+pip install "requiem-auto-click @ https://github.com/sevboa/requiem-auto-click/archive/refs/heads/master.zip"
+```
+
+После установки появится консольная команда:
+
+```bash
+requiem-auto-click --help
+```
+
+## Установка (локально из репы)
+
 Установка зависимостей:
 
 ```bash
@@ -20,6 +36,7 @@ pip install -r requirements.txt
 ## Быстрый старт (CLI)
 
 Все входные данные передаются через **дополнительный `.py` файл-конфиг**, путь к которому указывается параметром `--config`.
+Этот файл можно хранить **где угодно** (хоть на рабочем столе) — главное передать путь.
 
 ### Заточка до уровня
 
@@ -28,7 +45,7 @@ pip install -r requirements.txt
 2) Запусти:
 
 ```bash
-python main.py sharpening_items_to --config configs/example_sharpening.py
+requiem-auto-click sharpening_items_to --config configs/example_sharpening.py
 ```
 
 ### Разбор предметов
@@ -38,7 +55,7 @@ python main.py sharpening_items_to --config configs/example_sharpening.py
 2) Запусти:
 
 ```bash
-python main.py disassemble_items --config configs/example_disassemble.py
+requiem-auto-click disassemble_items --config configs/example_disassemble.py
 ```
 
 ## Формат конфигов
@@ -79,5 +96,11 @@ python main.py disassemble_items --config configs/example_disassemble.py
 Удобный подход:
 - скопируй пример в `configs/local_sharpening.py` или `configs/local_disassemble.py`
 - не коммить эти файлы (можно добавить их в `.gitignore` вручную под себя)
+
+Если ставишь через `pip install`, примеры конфигов можно найти так:
+
+```bash
+python -c "import configs, pathlib; print(pathlib.Path(configs.__file__).parent)"
+```
 
 

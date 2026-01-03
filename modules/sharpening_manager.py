@@ -19,7 +19,8 @@ from modules.backpack_manager import BackpackManager
 class SharpeningManager:
     """Минимальный менеджер интерфейса заточки (sharpening)."""
 
-    TEMPLATE_WINDOW_OPENED: Path = Path("modules/sharpening/window_opened_sharpening.png")
+    _ASSETS_DIR: Path = Path(__file__).resolve().parent / "sharpening"
+    TEMPLATE_WINDOW_OPENED: Path = _ASSETS_DIR / "window_opened_sharpening.png"
     EXCLUDE_BOTTOM_STRIP_PX: int = 347
     EXCLUDE_RIGHT_STRIP_PX: int = 145
 
@@ -52,18 +53,18 @@ class SharpeningManager:
     SHARPENING_DIGIT2_IN_DIGITS_ROI_TOP_LEFT: tuple[int, int] = (8, 0)
 
     # Проверка активности кнопки "Авто" (наличие активного состояния в нижней части окна)
-    TEMPLATE_AUTO_ACTIVE: Path = Path("modules/sharpening/bottom_auto_active.png")
+    TEMPLATE_AUTO_ACTIVE: Path = _ASSETS_DIR / "bottom_auto_active.png"
     AUTO_ACTIVE_TOP_LEFT_FROM_WINDOW_TOP_LEFT: tuple[int, int] = (218, 181)
     AUTO_ACTIVE_ROI_SIZE: tuple[int, int] = (69, 22)
     AUTO_NOT_ACTIVE_ERROR_MESSAGE: str = "Закончились ксеоны, либо иная проблема"
 
     # Проверка безопасной заточки (если найдено — заточка "безопасная")
-    TEMPLATE_SAVE_SHARPENING: Path = Path("modules/sharpening/save_sharpening.png")
+    TEMPLATE_SAVE_SHARPENING: Path = _ASSETS_DIR / "save_sharpening.png"
     SAVE_SHARPENING_TOP_LEFT_FROM_WINDOW_TOP_LEFT: tuple[int, int] = (103, 332)
     SAVE_SHARPENING_ROI_SIZE: tuple[int, int] = (36, 7)
 
     # Проверка окна ошибки с кнопкой OK (попап). ROI вычисляется от центра client area.
-    TEMPLATE_REJECT_OK: Path = Path("modules/sharpening/bottom_reject_ok.png")
+    TEMPLATE_REJECT_OK: Path = _ASSETS_DIR / "bottom_reject_ok.png"
     REJECT_OK_ROI_TOP_LEFT_FROM_CLIENT_CENTER: tuple[int, int] = (-53, -95)
     REJECT_OK_ROI_SIZE: tuple[int, int] = (106, 26)
 
@@ -224,7 +225,7 @@ class SharpeningManager:
         best_score: float = -1.0
         for i in range(1, 6):
             variant = f"a{i}"
-            tpl = Path(f"modules/sharpening/digits/+_{variant}.png")
+            tpl = self._ASSETS_DIR / "digits" / f"+_{variant}.png"
             score = self._image_finder.match_template_score_in_gray(
                 plus_gray,
                 template_png_path=tpl,
@@ -279,7 +280,7 @@ class SharpeningManager:
         best_digit: int | None = None
         best_score: float = -1.0
         for d in range(9, -1, -1):
-            tpl = Path(f"modules/sharpening/digits/{d}_{variant}.png")
+            tpl = self._ASSETS_DIR / "digits" / f"{d}_{variant}.png"
             score = self._image_finder.match_template_score_in_gray(
                 patch_gray,
                 template_png_path=tpl,
@@ -381,7 +382,7 @@ class SharpeningManager:
         best_digit: int | None = None
         best_score: float = -1.0
         for d in range(9, -1, -1):
-            tpl = Path(f"modules/sharpening/digits/{d}_{variant}.png")
+            tpl = self._ASSETS_DIR / "digits" / f"{d}_{variant}.png"
             hit = self._image_finder.find_template_in_client_roi(
                 template_png_path=tpl,
                 roi_top_left_client=roi_top_left_client,

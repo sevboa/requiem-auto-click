@@ -133,8 +133,10 @@ class RequiemClicker:
         Returns:
             dict (top-left, template_size, elapsed_s, score) или None.
         """
+        # Ищем шаблоны относительно установленного пакета (site-packages), а не cwd.
+        img_dir = Path(__file__).resolve().parents[1] / "img"
         return self.image_finder.find_template_in_client_roi(
-            template_png_path=str(Path("img") / template_png_path),
+            template_png_path=str(img_dir / template_png_path),
             roi_top_left_client=roi_top_left_client,
             roi_size=roi_size,
             threshold=threshold,

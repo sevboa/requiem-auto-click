@@ -18,6 +18,7 @@ from modules.image_finder import ImageFinder
 class BackpackManager:
     """Менеджер рюкзака/мешков (UI)."""
 
+    _ASSETS_DIR: Path = Path(__file__).resolve().parent / "backpack"
     ROI_SIZE: tuple[int, int] = (27, 20)
     ROI_TOP_LEFT_FROM_BOTTOM_RIGHT: tuple[int, int] = (145, 65)  # (dx_from_right, dy_from_bottom)
 
@@ -74,7 +75,7 @@ class BackpackManager:
         grid_step_x_px: int = GRID_STEP_X_PX,
         grid_step_y_px: int = GRID_STEP_Y_PX,
         grid_anchor_top_left_from_bottom_right: tuple[int, int] = ROI_TOP_LEFT_FROM_BOTTOM_RIGHT,
-        templates_dir: Path | str = Path("modules/backpack"),
+        templates_dir: Path | str = _ASSETS_DIR,
         validate_on_init: bool = True,
     ) -> None:
         self._clicker = clicker

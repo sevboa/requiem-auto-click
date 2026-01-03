@@ -17,7 +17,8 @@ from modules.backpack_manager import BackpackManager
 class DisassembleManager:
     """Минимальный менеджер интерфейса разборки (disassemble)."""
 
-    TEMPLATE_WINDOW_OPENED: Path = Path("modules/disassemble/window_opened_disassemble.png")
+    _ASSETS_DIR: Path = Path(__file__).resolve().parent / "disassemble"
+    TEMPLATE_WINDOW_OPENED: Path = _ASSETS_DIR / "window_opened_disassemble.png"
     EXCLUDE_BOTTOM_STRIP_PX: int = 360
     DEFAULT_TITLE_CENTER_TARGET_ON_SCREEN: tuple[int, int] = (313, 76)
     # После выравнивания (drag заголовка в DEFAULT_TITLE_CENTER_TARGET_ON_SCREEN) шаблон оказывается здесь в client coords.
