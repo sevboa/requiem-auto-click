@@ -12,7 +12,7 @@ def _read_readme() -> str:
 
 setup(
     name="requiem-auto-click",
-    version="0.1.0",
+    version="0.1.1",
     description="Requiem auto clicker (sharpen/disassemble) for Windows",
     long_description=_read_readme(),
     long_description_content_type="text/markdown",

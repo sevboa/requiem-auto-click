@@ -43,8 +43,8 @@ if __name__ == "__main__":
     
     # Дальше все методы запускаются напрямую (без Controller/декораторов)
     requiem_clicker.sharpening_items_to(targets=items_to_sharpen)
-    requiem_clicker.disassemble_items(retries=retries_disassemble)
     exit()
+    requiem_clicker.disassemble_items(retries=retries_disassemble)
     requiem_clicker.sharpening = SharpeningManager(clicker=requiem_clicker.clicker, image_finder=requiem_clicker.image_finder, backpacks=requiem_clicker.backpacks)
     requiem_clicker.sharpening.top_left_in_client = tuple(requiem_clicker.sharpening.DEFAULT_WINDOW_TOP_LEFT_IN_CLIENT)  
     started = time.perf_counter()

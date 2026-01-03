@@ -28,6 +28,6 @@ window_title_substring = "Requiem"
 # - True: при старте попросит нажать Backspace (в конструкторе) и затем ']' (перед началом действий)
 # - False: пропустит ожидания (удобно для полностью консольного запуска)
 wait_for_backspace_on_init = True
-confirm_with_bracket = True
+confirm_with_bracket = False
 
 

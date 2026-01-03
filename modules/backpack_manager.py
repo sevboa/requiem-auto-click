@@ -32,7 +32,7 @@ class BackpackManager:
     TEMPLATE_CLOSED: str = "bag_closed.png"
 
     # Ячейки содержимого 1-го рюкзака (5x5)
-    FIRST_BACKPACK_CELL_TOP_LEFT_FROM_BOTTOM_RIGHT: tuple[int, int] = (223, 495)
+    FIRST_BACKPACK_CELL_TOP_LEFT_FROM_BOTTOM_RIGHT: tuple[int, int] = (224, 495)
     FIRST_BACKPACK_CELL_GRID_ROWS: int = 5
     FIRST_BACKPACK_CELL_GRID_COLS: int = 5
     FIRST_BACKPACK_CELL_STEP_X_PX: int = 36

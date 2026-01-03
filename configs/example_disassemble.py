@@ -28,6 +28,6 @@ window_title_substring = "Requiem"
 
 # Опционально:
 wait_for_backspace_on_init = True
-confirm_with_bracket = True
+confirm_with_bracket = False
 
 

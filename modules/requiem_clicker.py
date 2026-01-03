@@ -71,7 +71,7 @@ def wait_for_mark_key(key=VK_OEM_6, prompt: str = "Нажмите ] для пр�
         time.sleep(0.02)
 
 
-def wait_for_backspace_key(prompt: str = "Активируйте окно Requiem и нажмите Backspace для запуска...") -> None:
+def wait_for_backspace_key(prompt: str = "Активируйте окно Requiem и нажмите Backspace для запуска... (для остановки нажмите Backspace повторно)") -> None:
     """Ожидает одиночного нажатия Backspace (нажатие + отпускание)."""
     print(prompt)
     last_state = False
@@ -388,7 +388,7 @@ class RequiemClicker:
                 for attempt in range(retries[row][col]):
                     # Проверка флага остановки
                     if stop.is_set():
-                        print("Получен сигнал остановки.")
+                        print("\nПолучен сигнал остановки.")
                         return
 
                     iter_started = time.perf_counter()
@@ -400,13 +400,13 @@ class RequiemClicker:
                         col=col,
                     ):
                         if stop.wait(0.2):
-                            print("Получен сигнал остановки.")
+                            print("\nПолучен сигнал остановки.")
                             return
                         # 1.0) Проверка "ошибочного" окна с кнопкой OK (после вставки предмета).
                         # Если появилось — закрываем кликом (внутри метода), ждём и пропускаем этот предмет.
                         if self.sharpening.check_reject_ok_popup_and_close():
                             if stop.wait(0.1):
-                                print("Получен сигнал остановки.")
+                                print("\nПолучен сигнал остановки.")
                                 return
                             # На всякий случай проверим доступность окна рюкзака перед переходом дальше
                             self.backpacks.ensure_backpack_window_available(0)
@@ -422,13 +422,13 @@ class RequiemClicker:
                         # 2) Авто
                         self.sharpening.click_auto()
                         if stop.wait(0.2):
-                            print("Получен сигнал остановки.")
+                            print("\nПолучен сигнал остановки.")
                             return
                         # 2.1) Проверка "безопасной" заточки: если safe и only_save=True — пропускаем предмет
                         is_sharpening_safe = self.sharpening.is_sharpening_safe()
                         if not(is_sharpening_safe) and only_save:
                             if stop.wait(0.25):
-                                print("Получен сигнал остановки.")
+                                print("\nПолучен сигнал остановки.")
                                 return
                             # При пропуске — убедимся, что окно рюкзака доступно (заголовок видим),
                             # иначе переоткроем рюкзак.
@@ -441,19 +441,19 @@ class RequiemClicker:
                         # 3) ОК
                         self.sharpening.click_ok()
                         if stop.wait(0.5):
-                            print("Получен сигнал остановки.")
+                            print("\nПолучен сигнал остановки.")
                             return
 
                         # 4) Клик по карте (client coords)
                         self.sharpening.click_map()
                         if stop.wait(1.0):
-                            print("Получен сигнал остановки.")
+                            print("\nПолучен сигнал остановки.")
                             return
 
                         # 5) Повторить (client coords) + сброс кэша top_left на DEFAULT_WINDOW_TOP_LEFT_IN_CLIENT
                         self.sharpening.click_repeat(reset_window_top_left=True)
                         if stop.wait(0.3):
-                            print("Получен сигнал остановки.")
+                            print("\nПолучен сигнал остановки.")
                             return
                     
                     done_iters += 1
@@ -549,7 +549,7 @@ class RequiemClicker:
                     # Точим конкретный предмет до target_level (по фактическому уровню).
                     while True:
                         if stop.wait(0.2):
-                            print("Получен сигнал остановки.")
+                            print("\nПолучен сигнал остановки.")
                             return
                         # 1) Перетащить предмет из ячейки рюкзака в ячейку заточки.
                         moved = self.sharpening.drag_item_from_backpack_cell_to_sharpening_cell(
@@ -571,13 +571,13 @@ class RequiemClicker:
                             break
 
                         if stop.wait(0.1):
-                            print("Получен сигнал остановки.")
+                            print("\nПолучен сигнал остановки.")
                             return
 
                         # 1.0) Проверка "ошибочного" окна с кнопкой OK (макс. уровень / отказ).
                         if self.sharpening.check_reject_ok_popup_and_close():
                             if stop.wait(0.4):
-                                print("Получен сигнал остановки.")
+                                print("\nПолучен сигнал остановки.")
                                 return
                             # Уровень максимальный -> переходим к следующему предмету.
                             self.backpacks.ensure_backpack_window_available(backpack_index)
@@ -591,7 +591,7 @@ class RequiemClicker:
                                 suffix=" max (reject_ok)\n",
                             )
                             if stop.wait(0.4):
-                                print("Получен сигнал остановки.")
+                                print("\nПолучен сигнал остановки.")
                                 return
                             break
 
@@ -607,7 +607,7 @@ class RequiemClicker:
                         if int(current_level) >= int(target_level):
                             self.sharpening.click_repeat(reset_window_top_left=True)
                             if stop.wait(0.25):
-                                print("Получен сигнал остановки.")
+                                print("\nПолучен сигнал остановки.")
                                 return
                             self.backpacks.ensure_backpack_window_available(backpack_index)
 
@@ -625,7 +625,7 @@ class RequiemClicker:
                         # 2) Авто (запуск заточки)
                         self.sharpening.click_auto()
                         if stop.wait(0.2):
-                            print("Получен сигнал остановки.")
+                            print("\nПолучен сигнал остановки.")
                             return
 
                         # 1.2) Проверить, что "Авто" активна (если нет — закончились ксеоны или проблема)
@@ -643,19 +643,19 @@ class RequiemClicker:
                         # 3) ОК
                         self.sharpening.click_ok()
                         if stop.wait(0.4):
-                            print("Получен сигнал остановки.")
+                            print("\nПолучен сигнал остановки.")
                             return
 
                         # 4) Клик по карте (client coords)
                         self.sharpening.click_map()
                         if stop.wait(1.0):
-                            print("Получен сигнал остановки.")
+                            print("\nПолучен сигнал остановки.")
                             return
 
                         # 5) Повторить (client coords) + сброс кэша top_left
                         self.sharpening.click_repeat(reset_window_top_left=True)
                         if stop.wait(0.4):
-                            print("Получен сигнал остановки.")
+                            print("\nПолучен сигнал остановки.")
                             return
 
                         # Цикл продолжается: уровень мог повыситься или откатиться — сверяемся заново.
@@ -716,7 +716,7 @@ class RequiemClicker:
                     for _ in range(retries[bag][row][col]):
                         # Проверка флага остановки
                         if stop.is_set():
-                            print("Получен сигнал остановки.")
+                            print("\nПолучен сигнал остановки.")
                             return
 
                         iter_started = time.perf_counter()
@@ -724,11 +724,11 @@ class RequiemClicker:
                         assert self.disassemble is not None
                         if self.disassemble.drag_item_from_backpack_cell_to_disassemble_cell(backpack_index=bag, row=row, col=col):   
                             if stop.wait(0.2):
-                                print("Получен сигнал остановки.")
+                                print("\nПолучен сигнал остановки.")
                                 return
                             self.disassemble.click_ok()
                             if stop.wait(1.0):
-                                print("Получен сигнал остановки.")
+                                print("\nПолучен сигнал остановки.")
                                 return
 
                         done_iters += 1

@@ -93,7 +93,7 @@ if __name__ == "__main__":
     # --- ВАРИАНТ 2: координаты внутри окна по подстроке заголовка ---
     path = grab_client_roi(
         title_substring="Requiem",
-        x=792, y=237, w=189, h=29,
+        x=801, y=273, w=33, h=34,
         out_path="win_region.png"
     )
     print("Saved:", path)
