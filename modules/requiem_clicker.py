@@ -71,7 +71,7 @@ def wait_for_mark_key(key=VK_OEM_6, prompt: str = "Нажмите ] для пр�
         time.sleep(0.02)
 
 
-def wait_for_backspace_key(prompt: str = "Нажмите Backspace для запуска...") -> None:
+def wait_for_backspace_key(prompt: str = "Активируйте окно Requiem и нажмите Backspace для запуска...") -> None:
     """Ожидает одиночного нажатия Backspace (нажатие + отпускание)."""
     print(prompt)
     last_state = False
@@ -88,16 +88,24 @@ def wait_for_backspace_key(prompt: str = "Нажмите Backspace для зап
 class RequiemClicker:
     """Класс для выполнения автоматизации в игре Requiem."""
     
-    def __init__(self, mouse_client: MouseClient, window_title_substring: str = "Requiem"):
+    def __init__(
+        self,
+        mouse_client: MouseClient,
+        window_title_substring: str = "Requiem",
+        *,
+        wait_for_backspace_on_init: bool = True,
+    ):
         """
         Инициализирует RequiemClicker.
         
         Args:
             mouse_client: Экземпляр класса, реализующего интерфейс MouseClient
             window_title_substring: Подстрока для поиска окна по заголовку
+            wait_for_backspace_on_init: Если True — перед стартом ждать одиночного Backspace.
         """
-        # Самое первое действие: ждём Backspace. До этого никаких проверок/поисков UI не выполняем.
-        wait_for_backspace_key()
+        # Самое первое действие (по умолчанию): ждём Backspace. До этого никаких проверок/поисков UI не выполняем.
+        if wait_for_backspace_on_init:
+            wait_for_backspace_key()
         self.clicker = Clicker(mouse_client, window_title_substring)
         # Важно: ImageFinder должен использовать тот же hwnd, что и Clicker,
         # иначе возможно рассогласование кликов и ROI-захвата при наличии нескольких hwnd.
@@ -460,6 +468,7 @@ class RequiemClicker:
         *,
         stop_flag: Optional[StopFlag] = None,
         backpack_indices: Optional[list[int]] = None,
+        confirm_with_bracket: bool = True,
     ) -> None:
         """
         Точит предметы до заданного уровня (по фактическому уровню заточки).
@@ -512,7 +521,8 @@ class RequiemClicker:
                         total_items += 1
 
         play_start_sound()
-        wait_for_mark_key(key=VK_OEM_6, prompt="Нажмите ] для продолжения...")
+        if confirm_with_bracket:
+            wait_for_mark_key(key=VK_OEM_6, prompt="Нажмите ] для продолжения...")
 
         # Закрываем мешающие окна рюкзаков, затем находим окно заточки и кэшируем координаты.
         self.backpacks.close_all_opened_backpacks(refresh=True)
@@ -651,7 +661,13 @@ class RequiemClicker:
         print("\nГотово")
         play_finish_sound()
 
-    def disassemble_items(self, retries: Optional[list] = None, stop_flag: Optional[StopFlag] = None) -> None:
+    def disassemble_items(
+        self,
+        retries: Optional[list] = None,
+        stop_flag: Optional[StopFlag] = None,
+        *,
+        confirm_with_bracket: bool = True,
+    ) -> None:
         """
         Выполняет разбор предметов.
         
@@ -660,6 +676,7 @@ class RequiemClicker:
             stop_flag: Флаг для остановки выполнения скрипта
         """
 
+        stop = self._ensure_stop_flag(stop_flag)
         self.backpacks.close_all_opened_backpacks()
 
         self.disassemble = DisassembleManager(
@@ -679,10 +696,11 @@ class RequiemClicker:
 
         print("Этот скрипт разберет предметы согласно настройкам")
         play_start_sound()
-        wait_for_mark_key(
-            key=VK_OEM_6,
-            prompt="Нажмите ] для продолжения..."
-        )
+        if confirm_with_bracket:
+            wait_for_mark_key(
+                key=VK_OEM_6,
+                prompt="Нажмите ] для продолжения..."
+            )
 
         for bag in range(len(retries)):
             if len(retries[bag]) == 0:    
@@ -695,7 +713,7 @@ class RequiemClicker:
                         continue
                     for _ in range(retries[bag][row][col]):
                         # Проверка флага остановки
-                        if stop_flag and stop_flag.is_set():
+                        if stop.is_set():
                             print("Получен сигнал остановки.")
                             return
 
@@ -703,9 +721,13 @@ class RequiemClicker:
 
                         assert self.disassemble is not None
                         if self.disassemble.drag_item_from_backpack_cell_to_disassemble_cell(backpack_index=bag, row=row, col=col):   
-                            time.sleep(0.2) 
+                            if stop.wait(0.2):
+                                print("Получен сигнал остановки.")
+                                return
                             self.disassemble.click_ok()
-                            time.sleep(1.0)
+                            if stop.wait(1.0):
+                                print("Получен сигнал остановки.")
+                                return
 
                         done_iters += 1
                         iter_seconds = time.perf_counter() - iter_started
