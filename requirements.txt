@@ -1,0 +1,5 @@
+dxcam
+opencv-python
+numpy
+pywin32
+mss

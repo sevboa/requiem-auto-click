@@ -1,0 +1,58 @@
+# ==== Python ====
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pytype/
+.tox/
+.nox/
+.coverage
+coverage.xml
+htmlcov/
+dist/
+build/
+*.egg-info/
+pip-wheel-metadata/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Jupyter / IPython
+.ipynb_checkpoints/
+.ipython/
+
+# ==== IDEs / Editors ====
+# VS Code (workspace-local settings & caches)
+.vscode/
+.history/
+
+# JetBrains
+.idea/
+
+# ==== OS / Windows noise ====
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ==== Logs / temp ====
+*.log
+*.tmp
+*.temp
+
+# ==== Project-specific ====
+# Local terminals snapshots from Cursor (if ever copied into repo)
+terminals/
+
+# Ignore only root-level archives/images (keep assets inside subfolders)
+/*.zip
+/*.png
+
