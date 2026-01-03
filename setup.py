@@ -37,7 +37,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "requiem-auto-clicks=modules.cli:main",
+            "requiem-auto-click=modules.cli:main",
         ]
     },
 )

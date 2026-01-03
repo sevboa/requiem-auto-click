@@ -3,6 +3,7 @@
 Скрипт для автоматизации действий в игре **Requiem** (Windows).
 
 Сейчас поддерживаются консольные команды:
+- `init` — скопировать примеры конфигов в текущую папку (`./disassemble.py`, `./sharpening.py`).
 - `sharpening_items_to` — заточка предметов до заданного уровня (по фактическому значению заточки).
 - `disassemble_items` — разбор предметов.
 
@@ -11,52 +12,65 @@
 - Windows
 - Python 3.10+ (желательно)
 
-## Установка (через pip)
+## Как пользоваться (по шагам)
 
-Установка через pip с GitHub:
+### 0) Создать рабочую папку
+
+Рекомендуется завести отдельную папку, из которой вы будете запускать команду и где будут лежать ваши конфиги:
+
+```bash
+mkdir requiem-run
+cd requiem-run
+```
+
+### 1) Установка через pip (без git)
 
 ```bash
 pip install "requiem-auto-click @ https://github.com/sevboa/requiem-auto-click/archive/refs/heads/master.zip"
 ```
 
-После установки появится консольная команда:
+Проверка:
 
 ```bash
 requiem-auto-click --help
 ```
 
-## Установка (локально из репы)
-
-Установка зависимостей:
+### 2) Создать конфиги (init)
 
 ```bash
-pip install -r requirements.txt
+requiem-auto-click init
 ```
 
-## Быстрый старт (CLI)
-
-Все входные данные передаются через **дополнительный `.py` файл-конфиг**, путь к которому указывается параметром `--config`.
-Этот файл можно хранить **где угодно** (хоть на рабочем столе) — главное передать путь.
-
-### Заточка до уровня
-
-1) Отредактируй конфиг `configs/example_sharpening.py` под себя (матрица `targets`).
-
-2) Запусти:
+Если файлы уже существуют — перезаписать:
 
 ```bash
-requiem-auto-click sharpening_items_to --config configs/example_sharpening.py
+requiem-auto-click init --force
 ```
 
-### Разбор предметов
+### 3) Отредактировать конфиги
 
-1) Отредактируй конфиг `configs/example_disassemble.py` под себя (матрица `retries`).
+- `./sharpening.py` — правь матрицу `targets`
+- `./disassemble.py` — правь матрицу `retries`
 
-2) Запусти:
+### 4) Запуск
+
+Заточка:
 
 ```bash
-requiem-auto-click disassemble_items --config configs/example_disassemble.py
+requiem-auto-click sharpening_items_to --config ./sharpening.py
 ```
+
+Разбор:
+
+```bash
+requiem-auto-click disassemble_items --config ./disassemble.py
+```
+
+### Если команда не находится
+
+Обычно помогает:
+- открыть **новый терминал** после установки
+- убедиться, что ты запускаешь в том же окружении Python, куда ставил пакет (venv/глобальный Python)
 
 ## Формат конфигов
 
@@ -90,17 +104,3 @@ requiem-auto-click disassemble_items --config configs/example_disassemble.py
 - По умолчанию конструктор `RequiemClicker` **ждёт Backspace**, чтобы ты мог спокойно навести курсор/окно и только потом стартовать.
 - По умолчанию перед началом сценария будет запрос на `]` (второе подтверждение).
 - Во время выполнения можно останавливать сценарии через Backspace (актуально для CLI тоже).
-
-## Локальные конфиги (чтобы не коммитить свои настройки)
-
-Удобный подход:
-- скопируй пример в `configs/local_sharpening.py` или `configs/local_disassemble.py`
-- не коммить эти файлы (можно добавить их в `.gitignore` вручную под себя)
-
-Если ставишь через `pip install`, примеры конфигов можно найти так:
-
-```bash
-python -c "import configs, pathlib; print(pathlib.Path(configs.__file__).parent)"
-```
-
-
