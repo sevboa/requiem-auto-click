@@ -56,3 +56,5 @@ terminals/
 /*.zip
 /*.png
 
+/sources
+/source
