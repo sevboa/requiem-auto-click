@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
+import shutil
 from pathlib import Path
 from types import ModuleType
 from typing import Any, Optional
@@ -49,19 +50,67 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument(
         "method",
-        choices=["sharpening_items_to", "disassemble_items"],
+        choices=["init", "sharpening_items_to", "disassemble_items"],
         help="Which scenario to run.",
     )
     p.add_argument(
         "--config",
-        required=True,
+        required=False,
         help="Path to a .py config file (targets/retries and optional settings).",
+    )
+    p.add_argument(
+        "--force",
+        action="store_true",
+        help="Overwrite existing files when running init.",
     )
     return p
 
 
+def _run_init(*, force: bool) -> int:
+    """
+    Копирует примеры конфигов в текущую директорию, чтобы пользователь мог быстро стартовать.
+    """
+    try:
+        import configs  # type: ignore
+    except Exception as e:
+        raise RuntimeError(f"Не удалось импортировать пакет configs (примеры конфигов). Ошибка: {e}") from e
+
+    src_dir = Path(configs.__file__).resolve().parent
+    pairs = [
+        (src_dir / "example_disassemble.py", Path.cwd() / "disassemble.py"),
+        (src_dir / "example_sharpening.py", Path.cwd() / "sharpening.py"),
+    ]
+
+    for src, dst in pairs:
+        if not src.exists():
+            raise FileNotFoundError(f"Example config not found inside installed package: {src}")
+        if dst.exists() and not force:
+            raise FileExistsError(f"File already exists: {dst}. Use --force to overwrite.")
+        shutil.copyfile(src, dst)
+
+    # Use ASCII-only output to avoid mojibake in some Windows consoles.
+    print("Created config files:")
+    print("  ./disassemble.py")
+    print("  ./sharpening.py")
+    print("")
+    print("Run:")
+    print("  requiem-auto-click disassemble_items --config ./disassemble.py")
+    print("  requiem-auto-click sharpening_items_to --config ./sharpening.py")
+    print("")
+    print("Edit:")
+    print("  - disassemble.py: change `retries`")
+    print("  - sharpening.py:  change `targets`")
+    return 0
+
+
 def main(argv: Optional[list[str]] = None) -> int:
     args = _build_parser().parse_args(argv)
+    if args.method == "init":
+        return _run_init(force=bool(getattr(args, "force", False)))
+
+    if not args.config:
+        raise SystemExit("Ошибка: для этого метода нужен параметр --config <path_to_config.py>")
+
     cfg = _load_config_module(args.config)
 
     window_title_substring: str = str(_get_opt(cfg, "window_title_substring", "Requiem"))
