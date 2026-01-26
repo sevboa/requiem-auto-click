@@ -1,4 +1,5 @@
 import ctypes
+import time
 from pathlib import Path
 
 import cv2
@@ -91,9 +92,10 @@ if __name__ == "__main__":
     # print("Saved:", path)
 
     # --- ВАРИАНТ 2: координаты внутри окна по подстроке заголовка ---
+    time.sleep(1)
     path = grab_client_roi(
         title_substring="Requiem",
-        x=801, y=273, w=33, h=34,
+        x=800,y=438,w=320,h=20,
         out_path="win_region.png"
     )
     print("Saved:", path)

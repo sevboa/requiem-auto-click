@@ -2,6 +2,7 @@ include README.md
 include requirements.txt
 
 # PNG templates used by the automation
-recursive-include modules *.png
-recursive-include img *.png
+recursive-include requiem_auto_click/modules *.png
+recursive-include requiem_auto_click/img *.png
+recursive-include requiem_auto_click/gui/plugins/launcher_plugin/assets *.png
 

@@ -1,8 +1,8 @@
 """Точка входа в программу."""
 import time
-from modules.requiem_clicker import RequiemClicker
-from modules.windows_mouse_client import WindowsMouseClient
-from modules.sharpening_manager import SharpeningManager
+from requiem_auto_click.modules.requiem_clicker import RequiemClicker
+from requiem_auto_click.modules.windows_mouse_client import WindowsMouseClient
+from requiem_auto_click.modules.sharpening_manager import SharpeningManager
 
 if __name__ == "__main__":
 
@@ -14,9 +14,7 @@ if __name__ == "__main__":
 
     items_to_sharpen = [
         [
-            [30,30,30,30,30], 
-            [30,30,30,30,30],
-            [30,30,30,30,30],
+            [30,],
         ]
     ]        
 
@@ -43,12 +41,12 @@ if __name__ == "__main__":
     
     # Дальше все методы запускаются напрямую (без Controller/декораторов)
     requiem_clicker.sharpening_items_to(targets=items_to_sharpen)
-    exit()
     requiem_clicker.disassemble_items(retries=retries_disassemble)
     requiem_clicker.sharpening = SharpeningManager(clicker=requiem_clicker.clicker, image_finder=requiem_clicker.image_finder, backpacks=requiem_clicker.backpacks)
     requiem_clicker.sharpening.top_left_in_client = tuple(requiem_clicker.sharpening.DEFAULT_WINDOW_TOP_LEFT_IN_CLIENT)  
     started = time.perf_counter()
-    value = requiem_clicker.sharpening.get_current_sharpening_value()
+    # Вручную задаём variant, если не делали detect '+' через ensure_item_is_sharpenable()
+    value = requiem_clicker.sharpening.get_current_sharpening_value(variant="a1")
     elapsed = time.perf_counter() - started
     print(f"Время исполнения функции: {elapsed:.3f} сек")
     print(value)

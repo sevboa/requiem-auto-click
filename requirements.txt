@@ -4,3 +4,4 @@ numpy
 pywin32
 mss
 setuptools
+sa-ui-operations-base @ https://github.com/sevboa/sa-ui-operations-base/archive/refs/tags/v1.1.0.zip
